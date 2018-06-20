@@ -1,0 +1,17 @@
+---
+- name: Install VirtualBox
+  package:
+    name: "virtualbox"
+    state: present
+
+- name: Install VS Code
+  block:
+    - name: Install VS Code Repo
+      apt:
+        deb: https://go.microsoft.com/fwlink/?LinkID=760868
+        state: present
+
+    - name: Install VS Code
+      apt:
+        name: code
+        update_cache: true

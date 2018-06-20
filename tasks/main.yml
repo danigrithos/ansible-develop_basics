@@ -1,0 +1,3 @@
+---
+# tasks file for develop_basics
+- include: install.yml

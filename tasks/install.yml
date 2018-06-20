@@ -1,0 +1,13 @@
+---
+# Install Basic developer tools
+- name: Install tools
+  package:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - "vim"
+    - "docker"
+    - "git"
+    - "tmux"
+
+- include: install-{{ ansible_os_family }}.yml

@@ -1,0 +1,70 @@
+---
+- name: Install VirtualBox
+  block:
+    - name: Add VirtualBox Repo
+      yum_repository:
+        name: virtualbox
+        description: virtualbox
+        baseurl: http://download.virtualbox.org/virtualbox/rpm/el/$releasever/$basearch
+        gpgcheck: true
+        repo_gpgcheck: true
+        gpgkey: https://www.virtualbox.org/download/oracle_vbox.asc
+        enabled: true
+      register: virtualbox_yum_added
+
+    - name: update yum package cache for virtualbox repo
+      command: yum -q makecache -y --disablerepo='*' --enablerepo=virtualbox
+      when: virtualbox_yum_added.changed
+      changed_when: false
+      args:
+        warn: false
+
+    - name: Enable EPEL
+      package:
+        name: epel-release
+        state: present
+        update_cache: true
+
+    - name: Install DKMS
+      package:
+        name: dkms
+        state: present
+
+    - name: Install Development Tools yum group
+      yum:
+        name: "@Development Tools"
+        state: present
+
+    - name: Install Kernel Devel
+      package:
+        name: kernel-devel
+        state: present
+
+    - name: Install VirtualBox
+      package:
+        name: VirtualBox-5.1
+        state: present
+
+- name: Install VS Code
+  block:
+    - name: Install VS Code Repo
+      yum_repository:
+        name: vscode
+        description: vscode
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgcheck: true
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+        enabled: true
+      register: vscode_yum_added
+
+    - name: update yum package cache for vscode repo
+      command: yum -q makecache -y --disablerepo='*' --enablerepo=vscode
+      when: vscode_yum_added.changed
+      changed_when: false
+      args:
+        warn: false
+
+    - name: Install VS Code
+      package:
+        name: code
+        state: present
