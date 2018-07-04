@@ -4,10 +4,24 @@
   package:
     name: "{{item}}"
     state: present
+  become: true
   with_items:
     - "vim"
-    - "docker"
     - "git"
     - "tmux"
 
 - include: install-{{ ansible_os_family }}.yml
+
+- name: Make VIM dir
+  file:
+    path: /etc/vim
+    state: directory
+  become: true
+
+- name: Install supported VIMrc
+  template:
+    src: vim/vimrc.j2
+    dest: /etc/vim/supportedvimrc
+    owner: root
+    group: root
+  become: true

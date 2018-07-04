@@ -1,4 +1,17 @@
 ---
+- name: Install Docker
+  package:
+    name: "docker"
+    state: present
+  become: true
+
+- name: Enable Docker
+  service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
 - name: Install VirtualBox
   block:
     - name: Add VirtualBox Repo
@@ -10,11 +23,15 @@
         repo_gpgcheck: true
         gpgkey: https://www.virtualbox.org/download/oracle_vbox.asc
         enabled: true
+      become: true
       register: virtualbox_yum_added
 
     - name: update yum package cache for virtualbox repo
       command: yum -q makecache -y --disablerepo='*' --enablerepo=virtualbox
+      retries: 3
+      delay: 3
       when: virtualbox_yum_added.changed
+      become: true
       changed_when: false
       args:
         warn: false
@@ -24,26 +41,31 @@
         name: epel-release
         state: present
         update_cache: true
+      become: true
 
     - name: Install DKMS
       package:
         name: dkms
         state: present
+      become: true
 
     - name: Install Development Tools yum group
       yum:
         name: "@Development Tools"
         state: present
+      become: true
 
     - name: Install Kernel Devel
       package:
         name: kernel-devel
         state: present
+      become: true
 
     - name: Install VirtualBox
       package:
         name: VirtualBox-5.1
         state: present
+      become: true
 
 - name: Install VS Code
   block:
@@ -55,11 +77,13 @@
         gpgcheck: true
         gpgkey: https://packages.microsoft.com/keys/microsoft.asc
         enabled: true
+      become: true
       register: vscode_yum_added
 
     - name: update yum package cache for vscode repo
       command: yum -q makecache -y --disablerepo='*' --enablerepo=vscode
       when: vscode_yum_added.changed
+      become: true
       changed_when: false
       args:
         warn: false
@@ -68,3 +92,4 @@
       package:
         name: code
         state: present
+      become: true

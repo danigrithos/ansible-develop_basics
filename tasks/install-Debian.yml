@@ -1,8 +1,23 @@
 ---
+- name: Install Docker
+  package:
+    name: "docker.io"
+    state: present
+  become: true
+
+- name: Enable Docker
+  service:
+    name: docker
+    state: started
+    use: service
+    enabled: true
+  become: true
+
 - name: Install VirtualBox
   package:
     name: "virtualbox"
     state: present
+  become: true
 
 - name: Install VS Code
   block:
@@ -10,8 +25,10 @@
       apt:
         deb: https://go.microsoft.com/fwlink/?LinkID=760868
         state: present
+      become: true
 
     - name: Install VS Code
       apt:
         name: code
         update_cache: true
+      become: true

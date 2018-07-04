@@ -2,18 +2,20 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: vagrant
+  provider:
+    name: virtualbox
 lint:
   name: yamllint
 platforms:
   - name: UbuntuLTS
-    image: solita/ubuntu-systemd:18.04
-    privileged: true
+    box: ubuntu/bionic64
   - name: CentOS7.5
-    image: solita/centos-systemd:7
-    privileged: true
+    box: centos/7
 provisioner:
   name: ansible
+  playbooks:
+    prepare: prepare.yml
   lint:
     name: ansible-lint
     options:
